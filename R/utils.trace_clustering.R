@@ -1,6 +1,18 @@
 
+#' @importFrom magrittr %>%
+#' @export
+magrittr::`%>%`
+
+#' @importFrom stringr str_count str_length str_c str_extract_all fixed str_locate_all str_sub str_detect
+#' @importFrom purrr cross_df map_lgl map map_chr
+#' @importFrom tidyr unite nest spread
+#'
+#'
 # Getting traces from R\I based on a window size --------------------------
 get_window_traces <- function(R, I, window_size) {
+
+  trace_id <- absolute_frequency <- relative_frequency <- cum_rel_freq <- NULL
+
   # R: [tbl_df] set of remaining dpi's
   # I: [chr] set of ignored dpi's (or trace_id's)
   W <- R %>% dplyr::filter(!(trace_id %in% I$trace_id))
@@ -44,7 +56,7 @@ shortest_dist_dpi <- function(dict, C, W, distance_metric, equivalence_classes) 
 
     if(str_detect(deparse(distance_metric[[1]]), "stringdist")) {
       distances <- call(deparse(distance_metric[[1]]), a = tok_C %>% unlist(), b = tok_W, unlist(as.list(distance_metric[-1]))) %>% eval()
-    } else if(str_detect(deparese(distance_metric[[2]]), "mra")) {
+    } else if(str_detect(deparse(distance_metric[[2]]), "mra")) {
       distances <- call(deparse(distance_metric[[1]]), a = tok_C, b = tok_W, equivalence_classes, unlist(as.list(distance_metric[-1]))) %>% eval()
     }
 
@@ -59,6 +71,8 @@ shortest_dist_dpi <- function(dict, C, W, distance_metric, equivalence_classes) 
 
 # MRA distance method -----------------------------------------------------
 is_maximal_repeat <- function(trace, candidate) {
+
+  start <- end <- before <- after <- NULL
 
   if(str_count(trace, fixed(candidate)) > 1) {
     str_locate_all(trace, fixed(candidate))[[1]] %>%
@@ -77,6 +91,8 @@ is_maximal_repeat <- function(trace, candidate) {
 
 # Create candidates -------------------------------------------------------
 create_candidates <- function(max_length, full_log_trace, activities) {
+
+  candidate <- NULL
 
   tibble(candidate = activities, length = 1) %>%
     mutate(count = str_count(full_log_trace, fixed(candidate))) %>%
@@ -113,12 +129,16 @@ create_candidates <- function(max_length, full_log_trace, activities) {
 
 # Get alphabet set --------------------------------------------------------
 get_alphabet_set <- function(max_repeat, activities) {
+
   sort(unique(str_extract_all(max_repeat, fixed(activities)) %>% unlist()))
 }
 
 
 # Get MRA -----------------------------------------------------------------
 get_MRA <- function(candidates, full_log_trace, activities) {
+
+  candidate <- alphabet <- alphabet_char <- NULL
+
   max_repeats <- candidates %>%
     mutate(is_maximal_repeat = map_lgl(candidate, ~is_maximal_repeat(full_log_trace, .x))) %>%
     filter(is_maximal_repeat)

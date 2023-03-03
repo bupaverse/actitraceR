@@ -1,6 +1,6 @@
-#' Cluster an event log based on its traces
+#' Cluster an event log based on its traces.
 #'
-#' Implementation of the active trace clustering algorithm as described in J. De Weerdt, S. vanden Broucke, J. Vanthienen and B. Baesens, "Active Trace Clustering for Improved Process Discovery," in IEEE Transactions on Knowledge and Data Engineering, vol. 25, no. 12, pp. 2708-2720, Dec. 2013, doi: 10.1109/TKDE.2013.64.
+#' Implementation of the active trace clustering (ActiTraC) algorithm.
 #'
 #' @param log [log]: An object of type [`log`].
 #' @param num_clusters [num]: A number of clusters.
@@ -10,8 +10,15 @@
 #' @param cluster_remaining_traces [lgl] (default `FALSE`): Whether to cluster the remaining traces together. If `FALSE` (default), the remaining traces are assigned to that cluster, with which it has the best fitness. Otherwise, clusters the remaining traces together in a new additional cluster.
 #' @param algo (default `pm4py::discovery_inductive`): A discovery algorithm.
 #' @param distance_metric (default "stringdist"): A distance calculation method. By default ("stringdist"), `stringdist()` of a `stringdist` package is used. The literature suggest "mra".
+#' @param ... Additional parameters
 #' @return [list] A `list` object containing event logs filtered on trace id's, as a result of clustering algorithm.
-#' @seealso J. De Weerdt, S. vanden Broucke, J. Vanthienen and B. Baesens, "Active Trace Clustering for Improved Process Discovery," in IEEE Transactions on Knowledge and Data Engineering, vol. 25, no. 12, pp. 2708-2720, Dec. 2013, doi: 10.1109/TKDE.2013.64.
+#' @seealso This function is an implementation of the active trace clustering (ActiTraC) algorithm: J. De Weerdt, S. vanden Broucke, J. Vanthienen and B. Baesens, "Active Trace Clustering for Improved Process Discovery," in IEEE Transactions on Knowledge and Data Engineering, vol. 25, no. 12, pp. 2708-2720, Dec. 2013, doi: 10.1109/TKDE.2013.64.
+#'
+#' @importFrom stringdist stringdist
+#' @importFrom stringr str_detect
+#' @importFrom purrr map map2
+#' @importFrom data.table transpose
+#' @importFrom pm4py discovery_inductive fitness_alignments precision_alignments
 #'
 #' @export
 cluster_traces <- function(log = eventdataR::patients,
@@ -23,6 +30,8 @@ cluster_traces <- function(log = eventdataR::patients,
                            algo = pm4py::discovery_inductive,
                            distance_metric = stringdist(method = "osa"),
                            ...) {
+
+  activity_id <- lifecycle_id <- trace_id <- absolute_frequency <- NULL
 
   # Prep
   log_original <- log
@@ -181,7 +190,7 @@ cluster_traces <- function(log = eventdataR::patients,
 
   # RETURN ORIGINAL LOG including both lifecycles (not only "complete")
   trace_ids <- CS %>% purrr::map(~pull(., trace_id))
-  logs_list <- trace_ids %>% purrr::map(~filter_trace(log = log, trace_ids = .x))
+  logs_list <- trace_ids %>% purrr::map(~filter_trace(log = log, trace_ids = .x)) # thus, using log
 
   # assign attributes of list of logs
   # fitness

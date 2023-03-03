@@ -6,8 +6,14 @@
 #' @param dict [list] A dictionary as returned by `get_dict()`.
 #' @return [data.frame] A collection of unique traces with additional information.
 #'
+#' @importFrom purrr map
+#'
 #' @export
 get_tokenized_traces <- function(log, dict) {
+
+  trace_id <- trace_list <- absolute_frequency <- relative_frequency <- NULL
+
+
   output <- log %>% bupaR::case_list(.keep_trace_list = T) %>%
     group_by(trace_id, trace, trace_list) %>%
     summarize(absolute_frequency = n(), .groups = "drop_last") %>%

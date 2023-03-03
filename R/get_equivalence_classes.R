@@ -6,6 +6,9 @@
 #' @param dict A dictionary as returned by `get_dict()`.
 #' @return A set of equivalence classes.
 #'
+#' @importFrom purrr map
+#' @importFrom stringr str_count
+#'
 #' @export
 get_equivalence_classes <- function(tokenized_traces, dict) {
 

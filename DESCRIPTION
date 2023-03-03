@@ -2,10 +2,12 @@ Package: actitraceR
 Type: Package
 Title: What the Package Does (Title Case)
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Authors@R: c(person("Gert","Janssenswillen", email = "gert.janssenswillen@uhasselt.be", role = c("aut","cre")),
+             person("Ivan","Esin", email = "ivan.esin@uhasselt.be", role = c("aut")))
+Description: Subsetting an event log into multiple clustered event logs based on their trace using ActiTraC algorithm.
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
+RoxygenNote: 7.2.3
+Imports: bupaR, pm4py, magrittr, dplyr, cli, edeaR, purrr, stringr, data.table, tidyr, stringdist
+

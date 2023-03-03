@@ -8,6 +8,8 @@
 #'
 #' @return A grouped log on cluster variable
 #'
+#' @import dplyr
+#'
 #' @export
 as_grouped_log <- function(x, ...) {
   UseMethod("as_grouped_log")
@@ -15,6 +17,7 @@ as_grouped_log <- function(x, ...) {
 
 #' @export
 as_grouped_log.trace_clustering <- function(x, ...) {
+  cluster <- NULL
   # add cluster column
   # group on cluster
   # return grouped_eventlog
