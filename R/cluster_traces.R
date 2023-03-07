@@ -16,8 +16,7 @@
 #'
 #' @importFrom stringdist stringdist
 #' @importFrom stringr str_detect
-#' @importFrom purrr map map2
-#' @importFrom data.table transpose
+#' @importFrom purrr map map2 transpose
 #' @importFrom pm4py discovery_inductive fitness_alignments precision_alignments
 #'
 #' @export
