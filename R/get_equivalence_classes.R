@@ -9,7 +9,7 @@
 #' @importFrom purrr map
 #' @importFrom stringr str_count
 #'
-#' @export
+
 get_equivalence_classes <- function(tokenized_traces, dict) {
 
   activities <- 1:length(dict) %>% paste0("[",., "]")

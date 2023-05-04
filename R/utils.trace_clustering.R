@@ -15,18 +15,18 @@ get_window_traces <- function(R, I, window_size) {
 
   # R: [tbl_df] set of remaining dpi's
   # I: [chr] set of ignored dpi's (or trace_id's)
-  W <- R %>% dplyr::filter(!(trace_id %in% I$trace_id))
-  W <- W %>% arrange(desc(absolute_frequency))
-  W <- W %>% mutate(cum_rel_freq = cumsum(relative_frequency)) %>% filter(lag(cum_rel_freq, default = 0) <= window_size)
-  W <- W %>% select(-cum_rel_freq)
-  return(W)
+  R %>% dplyr::filter(!(trace_id %in% I$trace_id)) %>%
+    arrange(desc(absolute_frequency)) %>%
+    mutate(cum_rel_freq = cumsum(relative_frequency)) %>%
+    filter(lag(cum_rel_freq, default = 0) <= window_size) %>%
+    select(-cum_rel_freq)
 }
 
 
 # Discover PM w/ GL -------------------------------------------------------
 discover_pm <- function(log, trace_ids, algo, ...) { # cluster from C
   GL <- log %>% edeaR::filter_trace(trace_ids = trace_ids)
-  PM <- algo(eventlog = GL, convert = T, ...)
+  suppressMessages({PM <- algo(GL, convert = T)})
   return(list(GL = GL, PM = PM))
 }
 
@@ -34,7 +34,7 @@ discover_pm <- function(log, trace_ids, algo, ...) { # cluster from C
 # Calculate fitness -------------------------------------------------------
 calc_fitness <- function(PM, log, trace_id) { # unique trace_id from R
   GL <- log %>% edeaR::filter_trace(trace_ids = trace_id)
-  pm4py::fitness_alignments(GL, PM)
+  suppressMessages({pm4py::fitness_alignments(GL, PM)})
 }
 
 

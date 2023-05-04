@@ -8,7 +8,7 @@
 #'
 #' @importFrom purrr map
 #'
-#' @export
+
 get_tokenized_traces <- function(log, dict) {
 
   trace_id <- trace_list <- absolute_frequency <- relative_frequency <- NULL
@@ -22,7 +22,7 @@ get_tokenized_traces <- function(log, dict) {
     select(trace_id, trace, absolute_frequency, relative_frequency, trace_list) %>%
     mutate(tokens = map(trace_list, to_token, dict))
 
-  cli::cli_alert_info(paste("log consisting of", nrow(output), "traces"))
+  cli::cli_alert_info(paste("Number of traces to cluster:", nrow(output)))
   return(output)
 }
 

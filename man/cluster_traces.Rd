@@ -5,13 +5,13 @@
 \title{Cluster an event log based on its traces.}
 \usage{
 cluster_traces(
-  log = eventdataR::patients,
-  num_clusters = 3,
-  target_fitness = 1,
-  mcs = 0.6,
+  log,
+  number_of_clusters = 3,
+  target_fitness = 0.8,
+  minimal_cluster_size = 0.6,
   window_size = 0.25,
   cluster_remaining_traces = F,
-  algo = pm4py::discovery_inductive,
+  discover_algorithm = pm4py::discover_inductive,
   distance_metric = stringdist(method = "osa"),
   ...
 )
@@ -19,21 +19,23 @@ cluster_traces(
 \arguments{
 \item{log}{[log]: An object of type [`log`].}
 
-\item{num_clusters}{[num]: A number of clusters.}
+\item{number_of_clusters}{[num]: A number of clusters.}
 
 \item{target_fitness}{[num]: A target value to compare with the log fitness.}
 
-\item{mcs}{[num]: A minimum cluster size to test whether the cluster is already big enough.}
+\item{minimal_cluster_size}{[num]: A minimal cluster size. Defined as a percentage.}
 
 \item{window_size}{[num]: A window size of the most frequent traces, i.e. traces with the highest absolute frequency. If `1`, all of the remaining traces are evaluated in the distance based method. If `0`, only one trace with the highest absolute frequency is chosen (frequency-based method).}
 
 \item{cluster_remaining_traces}{[lgl] (default `FALSE`): Whether to cluster the remaining traces together. If `FALSE` (default), the remaining traces are assigned to that cluster, with which it has the best fitness. Otherwise, clusters the remaining traces together in a new additional cluster.}
 
-\item{algo}{(default `pm4py::discovery_inductive`): A discovery algorithm.}
+\item{discover_algorithm}{(default `pm4py::discover_inductive`): A process discovery algorithm, returning a Petri Net}
 
-\item{distance_metric}{(default "stringdist"): A distance calculation method. By default ("stringdist"), `stringdist()` of a `stringdist` package is used. The literature suggest "mra".}
+\item{distance_metric}{(default "stringdist"): Distance calculation method.
+- stringdist: `stringdist()` of a `stringdist` package is used.
+- mra: Maximal repeat alphabet}
 
-\item{...}{Additional parameters}
+\item{...}{Additional parameters for discovery algorithm}
 }
 \value{
 [list] A `list` object containing event logs filtered on trace id's, as a result of clustering algorithm.
